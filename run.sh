@@ -10,7 +10,7 @@ do
     git reset --hard origin/master
     git clean -xdf
     docker-compose pull
-    docker-compose build
+    docker-compose build --force-rm
     docker-compose up -d --remove-orphans
     SHA1="$(git rev-parse HEAD)"
   fi
