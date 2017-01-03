@@ -13,6 +13,7 @@ do
   if [ "${SHA1}" != "$(git ls-remote --exit-code origin master | awk '{print $1;}')" ]; then
     echo "[i] update detected, fetching"
     git fetch --depth=1 --quiet
+    echo "[i] fetched $(git log --pretty=oneline --abbrev-commit --max-count=1 origin/master)"
     echo "[i] reset hard"
     git reset origin/master --hard --quiet
     echo "[i] clean"
