@@ -1,18 +1,25 @@
-FROM alpine:3.4
+FROM alpine:3.5
 
-RUN apk add --no-cache git python py-pip \
- && pip install --no-cache-dir awscli docker-compose \
+ENV INTERVAL=-1
+
+COPY run.sh /usr/local/bin/run.sh
+
+RUN apk add --no-cache \
+      git \
+      py2-pip \
+      python \
+      tini \
+ && pip install --no-cache-dir \
+      awscli \
+      docker-compose \
  && git config --global credential.helper '!aws codecommit credential-helper $@' \
  && git config --global credential.UseHttpPath true \
  && git --version \
  && aws --version \
- && docker-compose -v
+ && docker-compose --version
 
 WORKDIR /var/compose
 
-ENV INTERVAL=-1 \
-    REPO=required
+ENTRYPOINT ["/sbin/tini", "--"]
 
-ADD run.sh /run.sh
-
-CMD ["/run.sh"]
+CMD ["run.sh"]
